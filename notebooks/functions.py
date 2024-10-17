@@ -7,6 +7,27 @@ def name_columns(df):
     df.columns = df.columns.str.replace(' ', '_')
     return df
 
+def generate_synthetic_data(df, df2, columns_to_generate):
+    """
+    Genera datos sintéticos para las columnas especificadas en el DataFrame df,
+    basándose en la distribución de las mismas columnas en df2.
+
+    Args:
+    df (DataFrame): El DataFrame en el que se generarán los datos sintéticos.
+    df2 (DataFrame): El DataFrame base para calcular las distribuciones.
+    columns_to_generate (list): Lista de columnas a generar datos sintéticos.
+    
+    Returns:
+    DataFrame: El DataFrame original df con los datos sintéticos generados.
+    """
+    for column in columns_to_generate:
+        # Calcular la distribución en df2
+        distribution = df2[column].value_counts(normalize=True)
+        # Generar datos sintéticos para la columna en df
+        df[column] = np.random.choice(distribution.index, size=len(df), p=distribution.values)
+    
+    return df
+
 
 def remove_last_digits(df, col_name, num_digits):
     """
@@ -122,4 +143,49 @@ def convert_columns_to_float(df, col1, col2):
     """
     df[col1] = df[col1].astype(float)
     df[col2] = df[col2].astype(float)
+    return df
+
+def convert_to_boolean_yesno(df, cols_to_convert):
+    """
+    Convierte las columnas especificadas a tipo booleano.
+    
+    Args:
+    df (DataFrame): El DataFrame que contiene las columnas a modificar.
+    cols_to_convert (list): Una lista con los nombres de las columnas a convertir.
+    
+    Returns:
+    DataFrame: El DataFrame con las columnas convertidas a booleano.
+    """
+    for col in cols_to_convert:
+        df[col] = df[col].replace({'Yes': 1, 'No': 0})
+    return df
+
+def convert_to_boolean_gender(df, cols_to_convert):
+    """
+    Convierte las columnas especificadas a tipo booleano.
+    
+    Args:
+    df (DataFrame): El DataFrame que contiene las columnas a modificar.
+    cols_to_convert (list): Una lista con los nombres de las columnas a convertir.
+    
+    Returns:
+    DataFrame: El DataFrame con las columnas convertidas a booleano.
+    """
+    for col in cols_to_convert:
+        df[col] = df[col].replace({'Female': 1, 'Male': 0})
+    return df
+
+def convert_to_boolean_education(df, cols_to_convert):
+    """
+    Convierte las columnas especificadas a tipo booleano.
+    
+    Args:
+    df (DataFrame): El DataFrame que contiene las columnas a modificar.
+    cols_to_convert (list): Una lista con los nombres de las columnas a convertir.
+    
+    Returns:
+    DataFrame: El DataFrame con las columnas convertidas a booleano.
+    """
+    for col in cols_to_convert:
+        df[col] = df[col].replace({'Graduate': 1, 'Not Graduate': 0})
     return df
